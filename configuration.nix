@@ -5,12 +5,13 @@
 { config, pkgs, lib,... }:
 
 {
+
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./hyperland.nix
       # ./discord.nix
-      ./python.nix
+      # ./python.nix
     ];
 
   # ENV VARS
@@ -35,7 +36,7 @@
       customRC = ''
         set number
         set tabstop=2
-		set shiftwidth=2
+				set shiftwidth=2
       '';
     };
   };
@@ -43,8 +44,11 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot/efi";
-  
+  boot.loader.efi.efiSysMountPoint = "/boot/EFI";
+
+  boot.loader.grub.enable = false;
+  #boot.loader.generic-extlinux-compatible.enable = true;
+
   # Silent boot
   boot = { 
     kernelParams = [
@@ -58,7 +62,7 @@
     consoleLogLevel = 0;
     # https://github.com/NixOS/nixpkgs/pull/108294
     initrd.verbose = false;
-  };  
+  };
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -68,7 +72,12 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
-  networking.networkmanager.enable = true;
+  
+  networking = {
+    networkmanager.enable = true;
+    wireless.enable = false;
+  };
+
 
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
@@ -82,7 +91,7 @@
   # Enable the GNOME Desktop Environment.
   # services.xserver.displayManager.gdm.enable = true;
   # services.xserver.desktopManager.gnome.enable = true;
-  services.xserver.displayManager.lightdm.enable = false;
+  # services.xserver.displayManager.lightdm.enable = false;
 
   # Greeter
   # Run GreetD on TTY2
@@ -128,20 +137,20 @@
   services.printing.enable = true;
 
   # Fonts
-  fonts.packages = with pkgs; [
-    noto-fonts
-    noto-fonts-cjk
-    noto-fonts-emoji
-    liberation_ttf
-    fira-code
-    fira-code-symbols
-    dina-font
-    proggyfonts
-    font-awesome
-    meslo-lgs-nf
-    ubuntu_font_family
-    (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
-  ];
+  #fonts.packages = with pkgs; [
+    #noto-fonts
+    #noto-fonts-cjk
+    #noto-fonts-emoji
+    #liberation_ttf
+    #fira-code
+    #fira-code-symbols
+    #dina-font
+    #proggyfonts
+    #font-awesome
+    #meslo-lgs-nf
+    #ubuntu_font_family
+    #(nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
+  #];
 
   # XDG stuff
 
@@ -153,7 +162,7 @@
   };
 
   # Enable flatpak
-  services.flatpak.enable = true;
+  # services.flatpak.enable = true;
 
   # Enable gvfs (mount, trash...) for thunar
   services.gvfs.enable = true; # Mount, trash, and other functionalities
@@ -191,35 +200,35 @@
   users.users.cenk = {
     isNormalUser = true;
     description = "Cenk";
-    extraGroups = [ "networkmanager" "wheel" "mpd" "input" ];
+    extraGroups = [ "networkmanager" "wheel" "mpd" "input" "tty" "video"];
   };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
   # Latest Kernel
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  #boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # AMD Graphics Card 
   # boot.initrd.kernelModules = [ "amdgpu" ];
   # services.xserver.videoDrivers = [ "amdgpu" ];
 
   # enable GameMode
-  programs.gamemode.enable = true;
+  # programs.gamemode.enable = true;
 
   # Wine Stuff (32bit)
-  hardware.opengl.enable = true;
-  hardware.opengl.driSupport = true;
-  hardware.opengl.driSupport32Bit = true;
+  #hardware.opengl.enable = true;
+  #hardware.opengl.driSupport = true;
+  #hardware.opengl.driSupport32Bit = true;
 
-  hardware.opengl.extraPackages = with pkgs; [
-    intel-media-driver
-    vaapiVdpau
-		libvdpau-va-gl
-		# amdvlk
+  #hardware.opengl.extraPackages = with pkgs; [
+    #intel-media-driver
+    #vaapiVdpau
+    #libvdpau-va-gl
+    # amdvlk
     # rocm-opencl-icd
     # rocm-opencl-runtime
-  ];
+  #];
   
 	# For 32 bit applications 
   # Only available on unstable
@@ -229,36 +238,35 @@
   # ];
   
   # Enable virtualbox
-  virtualisation.virtualbox.host.enable = true;
-  users.extraGroups.vboxusers.members = [ "cenk" ];
+  # virtualisation.virtualbox.host.enable = true;
+  # users.extraGroups.vboxusers.members = [ "cenk" ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-		rpi-imager
-		parted
+    #rpi-imager
+    #parted
     wget
-		minizip
+    minizip
     firefox-wayland
     git
-    gamemode
     #steam
     #element-desktop
     #wineWowPackages.stable
-    lutris
-    vulkan-tools
-    vulkan-loader
+    #lutris
+    #vulkan-tools
+    #vulkan-loader
     #bottles
-    godot_4
+    #godot_4
     foot
-    inkscape
+    #inkscape
     #gimp-with-plugins
     gnome3.adwaita-icon-theme
     #blender
     waybar
     xdg-desktop-portal
-		xdg-desktop-portal-hyprland
+    xdg-desktop-portal-hyprland
     grim
     slurp
     pipewire
@@ -267,28 +275,28 @@
     xfce.thunar
     hyprpaper
     gnome.gnome-themes-extra
-    vlc
+    #vlc
     imv
     rofi-wayland
     ranger
     neofetch
-    gamescope
+    #gamescope
     mpv
     mako
-    weechat
-    gamemode
-    qbittorrent
-    p7zip
-    unrar
+    #weechat
+    #gamemode
+    #qbittorrent
+    #p7zip
+    #unrar
     wl-clipboard
     brightnessctl
     killall
     playerctl
     mpc-cli
     unzip
-    discord
-    jre8
-    prismlauncher
+    #discord
+    #jre8
+    #prismlauncher
     ffmpeg
     #openshot-qt
     #kdenlive
@@ -298,8 +306,8 @@
     polkit
     polkit-kde-agent
     #vscode
-		chromium
-		nodejs
+    #chromium
+    #nodejs
     ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -327,6 +335,7 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "22.11"; # Did you read the comment?
+  system.stateVersion = "23.05"; # Did you read the comment?
 
 }
+
