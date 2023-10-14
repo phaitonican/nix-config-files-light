@@ -36,15 +36,15 @@
       customRC = ''
         set number
         set tabstop=2
-				set shiftwidth=2
+	set shiftwidth=2
       '';
     };
   };
 
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot/EFI";
+  # boot.loader.systemd-boot.enable = true;
+  # boot.loader.efi.canTouchEfiVariables = true;
+  # boot.loader.efi.efiSysMountPoint = "/boot/EFI";
 
   boot.loader.grub.enable = false;
   #boot.loader.generic-extlinux-compatible.enable = true;
