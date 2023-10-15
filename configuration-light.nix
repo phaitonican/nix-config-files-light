@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib,... }:
+{ config, pkgs, lib, ... }:
 
 {
 
@@ -15,28 +15,28 @@
     VISUAL = "nvim";
   };
 
-  # Programs
-  programs = {
-		neovim = {
-    	enable = true;
-    	defaultEditor = true;
-    	configure = {
-      	customRC = ''
-        	set number
-        	set tabstop=2
-					set shiftwidth=2
-      	'';
-    	};
-		};
-		fish.enable = true;
-		hyprland.enable = true;
+  # NeoVim
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    configure = {
+      customRC = ''
+        set number
+        set tabstop=2
+        set shiftwidth=2
+      '';
+    };
   };
 
-	# Set fish shell default
-	users.defaultUserShell = pkgs.fish;
+  # Hyprland
+  programs.hyprland.enable = true;
+
+  # fish shell
+  programs.fish.enable = true;
+  users.defaultUserShell = pkgs.fish;
   environment.shells = with pkgs; [ fish ];
 
-	# Bootloader stuff
+  # Bootloader stuff
   boot.loader.grub.enable = false;
   boot.loader.generic-extlinux-compatible.enable = true;
 
@@ -60,6 +60,22 @@
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
+  # Fonts
+  fonts.packages = with pkgs; [
+    noto-fonts
+    noto-fonts-cjk
+    noto-fonts-emoji
+    liberation_ttf
+    fira-code
+    fira-code-symbols
+    dina-font
+    proggyfonts
+    font-awesome
+    meslo-lgs-nf
+    ubuntu_font_family
+    (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
+  ];
+
   # Greeter
   # Run GreetD on TTY2
   services.greetd = {
@@ -67,7 +83,9 @@
     vt = 7;
     settings = {
       default_session = {
-        command = "${lib.makeBinPath [pkgs.greetd.tuigreet] }/tuigreet --user-menu --time --cmd Hyprland";
+        command = "${
+            lib.makeBinPath [ pkgs.greetd.tuigreet ]
+          }/tuigreet --user-menu --time --cmd Hyprland";
         user = "greeter";
       };
     };
@@ -89,7 +107,7 @@
   services.dbus.enable = true;
   xdg.portal = {
     enable = true;
-		extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
   # Enable gvfs (mount, trash...) for thunar
@@ -117,10 +135,10 @@
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.cenk = {
-		initialPassword = "yo"
+    initialPassword = "yo";
     isNormalUser = true;
     description = "Cenk";
-    extraGroups = [ "networkmanager" "wheel" "input" "tty" "video"];
+    extraGroups = [ "networkmanager" "wheel" "input" "tty" "video" ];
   };
 
   # List packages installed in system profile. To search, run:
@@ -161,7 +179,7 @@
     polkit
     polkit-kde-agent
     #chromium
-    ];
+  ];
 
   system.stateVersion = "23.05"; # Did you read the comment?
 
