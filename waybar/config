@@ -1,0 +1,15 @@
+{
+  "include": "~/.config/waybar/modules",
+  "layer": "top",
+  "exclusive": true,
+  "passthrough": false,
+  "position": "top",
+  "fixed-center": true,
+  "spacing": 3,
+  "gtk-layer-shell": true,
+  "margin": 2,
+
+  "modules-left": ["cpu", "memory", "disk", "hyprland/window"],
+  "modules-center": ["wlr/workspaces"],
+  "modules-right": ["pulseaudio", "network", "tray", "clock"],
+}

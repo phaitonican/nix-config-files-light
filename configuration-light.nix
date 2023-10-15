@@ -6,11 +6,6 @@
 
 {
 
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hyperland.nix
-    ];
-
   # ENV VARS
   environment.sessionVariables = {
     MOZ_ENABLE_WAYLAND = "1";
@@ -20,24 +15,28 @@
     VISUAL = "nvim";
   };
 
-  # Fish Shell
-  programs.fish.enable = true;
-  users.defaultUserShell = pkgs.fish;
-  environment.shells = with pkgs; [ fish ];
-
-  # Nvim default
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-    configure = {
-      customRC = ''
-        set number
-        set tabstop=2
-	set shiftwidth=2
-      '';
-    };
+  # Programs
+  programs = {
+		neovim = {
+    	enable = true;
+    	defaultEditor = true;
+    	configure = {
+      	customRC = ''
+        	set number
+        	set tabstop=2
+					set shiftwidth=2
+      	'';
+    	};
+		};
+		fish.enable = true;
+		hyprland.enable = true;
   };
 
+	# Set fish shell default
+	users.defaultUserShell = pkgs.fish;
+  environment.shells = with pkgs; [ fish ];
+
+	# Bootloader stuff
   boot.loader.grub.enable = false;
   boot.loader.generic-extlinux-compatible.enable = true;
 
@@ -46,7 +45,6 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking and set hostname
-  
   networking = {
     hostName = "nixos";
     networkmanager.enable = true;
@@ -91,6 +89,7 @@
   services.dbus.enable = true;
   xdg.portal = {
     enable = true;
+		extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
   # Enable gvfs (mount, trash...) for thunar
@@ -118,6 +117,7 @@
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.cenk = {
+		initialPassword = "yo"
     isNormalUser = true;
     description = "Cenk";
     extraGroups = [ "networkmanager" "wheel" "input" "tty" "video"];
@@ -152,15 +152,15 @@
     brightnessctl
     killall
     playerctl
-    mpc-cli
+    #mpc-cli
     unzip
-    ffmpeg
+    #ffmpeg
     xarchiver
-    obs-studio
-    python3
+    #obs-studio
+    #python3
     polkit
     polkit-kde-agent
-    chromium
+    #chromium
     ];
 
   system.stateVersion = "23.05"; # Did you read the comment?
